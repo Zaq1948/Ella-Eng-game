@@ -1,282 +1,232 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Word Learning Game</title>
-    <style>
-        body {
-            font-family: 'Comic Sans MS', cursive, sans-serif;
-            background-color: #fce4ec;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        #game-container {
-            background-color: white;
-            border-radius: 20px;
-            padding: 20px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            text-align: center;
-            max-width: 600px;
-            width: 100%;
-        }
-        h1 {
-            color: #e91e63;
-        }
-        #word {
-            font-size: 36px;
-            color: #9c27b0;
-            margin: 20px 0;
-        }
-        .option {
-            background-color: #f8bbd0;
-            border: none;
-            border-radius: 15px;
-            color: #880e4f;
-            padding: 10px 20px;
-            margin: 5px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        .option:hover {
-            background-color: #f48fb1;
-        }
-        .option.selected {
-            background-color: #ff4081;
-            color: white;
-        }
-        #submit {
-            background-color: #4a148c;
-            color: white;
-            border: none;
-            border-radius: 15px;
-            padding: 10px 20px;
-            margin-top: 20px;
-            font-size: 18px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        #submit:hover {
-            background-color: #6a1b9a;
-        }
-        #feedback {
-            margin: 20px 0;
-            font-weight: bold;
-        }
-        .correct {
-            color: #4caf50;
-        }
-        .incorrect {
-            color: #f44336;
-        }
-        #status {
-            margin-top: 20px;
-            font-size: 14px;
-            color: #616161;
-        }
-    </style>
+<title>Wordy Fun!</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="game-container">
-        <h1>Word Learning Game</h1>
-        <div id="word"></div>
-        <div id="options"></div>
-        <button id="submit" disabled>Submit Answer</button>
-        <div id="feedback"></div>
-        <div id="status"></div>
+<div id="game-container">
+  <h1>Wordy Fun!</h1>
+  <div id="word"></div>
+  <div id="options"></div>
+  <div id="feedback"></div>
+  <div class="status">
+    <div class="status-item">
+      <span id="correctCount">0</span> Correct
     </div>
+    <div class="status-item">
+      <span id="wrongCount">0</span> Wrong
+    </div>
+    <div class="status-item">
+      <span id="wordsLeft">85</span> Words Left
+    </div>
+  </div>
+</div>
 
-    <script>
-        const words = [
-            {word: "age", meaning: "period of life", synonym: "stage of life"},
-            {word: "all of a sudden", meaning: "suddenly", synonym: "abruptly"},
-            {word: "all on (your) own", meaning: "independently", synonym: "alone"},
-            {word: "all over the place", meaning: "chaotically", synonym: "disorganized"},
-            {word: "behind", meaning: "at the back of", synonym: "after"},
-            {word: "bell", meaning: "sound signal", synonym: "chime"},
-            {word: "blow up", meaning: "explode", synonym: "explode"},
-            {word: "bold", meaning: "brave", synonym: "fearless"},
-            {word: "bring up", meaning: "mention", synonym: "raise"},
-            {word: "burst into tears", meaning: "start crying", synonym: "cry"},
-            {word: "calculate", meaning: "compute", synonym: "compute"},
-            {word: "check out", meaning: "examine", synonym: "inspect"},
-            {word: "collector", meaning: "gatherer", synonym: "gatherer"},
-            {word: "come first", meaning: "be the priority", synonym: "prioritize"},
-            {word: "debt", meaning: "money owed", synonym: "loan"},
-            {word: "demanding", meaning: "challenging", synonym: "difficult"},
-            {word: "determine", meaning: "decide", synonym: "decide"},
-            {word: "development", meaning: "advancement", synonym: "growth"},
-            {word: "disagreement", meaning: "difference of opinion", synonym: "conflict"},
-            {word: "discovery", meaning: "finding", synonym: "find"},
-            {word: "dishonest", meaning: "lying", synonym: "deceitful"},
-            {word: "dislike", meaning: "not like", synonym: "hate"},
-            {word: "dramatic", meaning: "emotional", synonym: "theatrical"},
-            {word: "either way", meaning: "any option", synonym: "either"},
-            {word: "extraordinary", meaning: "remarkable", synonym: "amazing"},
-            {word: "findings", meaning: "results", synonym: "results"},
-            {word: "fit", meaning: "healthy", synonym: "fit"},
-            {word: "focus", meaning: "concentration", synonym: "attention"},
-            {word: "get away with", meaning: "succeed in avoiding", synonym: "evade"},
-            {word: "give up", meaning: "abandon", synonym: "quit"},
-            {word: "go out", meaning: "leave", synonym: "exit"},
-            {word: "grown-up", meaning: "adult", synonym: "adult"},
-            {word: "hold up", meaning: "delay", synonym: "delay"},
-            {word: "hurry up", meaning: "speed up", synonym: "speed"},
-            {word: "identical", meaning: "exactly the same", synonym: "same"},
-            {word: "immoral", meaning: "unethical", synonym: "corrupt"},
-            {word: "in actual fact", meaning: "in reality", synonym: "actually"},
-            {word: "issue", meaning: "problem", synonym: "problem"},
-            {word: "knowledge", meaning: "information", synonym: "information"},
-            {word: "lively", meaning: "energetic", synonym: "active"},
-            {word: "log on", meaning: "sign in", synonym: "login"},
-            {word: "make sense", meaning: "be logical", synonym: "logical"},
-            {word: "misunderstand", meaning: "fail to understand", synonym: "misinterpret"},
-            {word: "mix up", meaning: "confuse", synonym: "confuse"},
-            {word: "modest", meaning: "humble", synonym: "humble"},
-            {word: "mystery", meaning: "puzzle", synonym: "enigma"},
-            {word: "nevertheless", meaning: "still", synonym: "yet"},
-            {word: "not believe (your) ears", meaning: "very surprising", synonym: "shock"},
-            {word: "on a diet", meaning: "restrict food", synonym: "diet"},
-            {word: "on the one hand", meaning: "on the one side", synonym: "first"},
-            {word: "personality", meaning: "character", synonym: "character"},
-            {word: "put up with", meaning: "tolerate", synonym: "endure"},
-            {word: "reason", meaning: "explanation", synonym: "reason"},
-            {word: "reassure", meaning: "comfort", synonym: "comfort"},
-            {word: "recycle", meaning: "reuse", synonym: "reuse"},
-            {word: "refund", meaning: "reimbursement", synonym: "reimbursement"},
-            {word: "relationship", meaning: "connection", synonym: "bond"},
-            {word: "remain calm", meaning: "stay composed", synonym: "calm"},
-            {word: "research", meaning: "investigate", synonym: "study"},
-            {word: "rob", meaning: "steal", synonym: "steal"},
-            {word: "rub out", meaning: "erase", synonym: "erase"},
-            {word: "salary", meaning: "payment for work", synonym: "wages"},
-            {word: "show up", meaning: "arrive", synonym: "arrive"},
-            {word: "sidewalk", meaning: "pavement", synonym: "pavement"},
-            {word: "significant", meaning: "important", synonym: "important"},
-            {word: "similarity", meaning: "resemblance", synonym: "likeness"},
-            {word: "sound angry", meaning: "sound upset", synonym: "angry"},
-            {word: "special offer", meaning: "promotion", synonym: "discount"},
-            {word: "split up", meaning: "break up", synonym: "break"},
-            {word: "strangely enough", meaning: "oddly", synonym: "oddly"},
-            {word: "sum up", meaning: "summarize", synonym: "summarize"},
-            {word: "take a risk", meaning: "take chances", synonym: "dare"},
-            {word: "tie up", meaning: "fasten", synonym: "fasten"},
-            {word: "tip", meaning: "helpful advice", synonym: "advice"},
-            {word: "to start with", meaning: "initially", synonym: "initially"},
-            {word: "uncomfortable", meaning: "ill at ease", synonym: "awkward"},
-            {word: "undressed", meaning: "without clothes", synonym: "naked"},
-            {word: "unemployed", meaning: "jobless", synonym: "jobless"},
-            {word: "unexpected", meaning: "surprising", synonym: "surprise"},
-            {word: "unknown", meaning: "not known", synonym: "not identified"},
-            {word: "unpack", meaning: "open", synonym: "take out"},
-            {word: "weakness", meaning: "lack of strength", synonym: "frailty"},
-            {word: "wear out", meaning: "wear down", synonym: "exhaust"}
-        ];
+<script>
+const wordList = [
+  { word: "stage of life", meaning: "period of life (n)", synonym: "li-age" },
+  { word: "abruptly", meaning: "suddenly", synonym: "all of a sudden" },
+  { word: "alone", meaning: "independent", synonym: "all on (yourself)" },
+  { word: "disorganize", meaning: "chaotically", synonym: "all over the place" },
+  { word: "after", meaning: "at the back", synonym: "behind" },
+  { word: "chime", meaning: "sound signal", synonym: "bell" },
+  { word: "explode", meaning: "explode", synonym: "blow up (verb)" },
+  { word: "fearless", meaning: "brave", synonym: "bold" },
+  { word: "raise", meaning: "mention", synonym: "bring up" },
+  { word: "cry", meaning: "start crying", synonym: "burst into tears" },
+  { word: "compute", meaning: "compute", synonym: "calculate" },
+  { word: "inspect", meaning: "examine", synonym: "check out" },
+  { word: "gatherer", meaning: "gatherer", synonym: "collector" },
+  { word: "prioritize", meaning: "be the priority", synonym: "come first" },
+  { word: "loan", meaning: "money owed", synonym: "debt" },
+  { word: "difficult", meaning: "challenging", synonym: "demanding" },
+  { word: "decide", meaning: "decide", synonym: "determine" },
+  { word: "growth", meaning: "advancement", synonym: "development" },
+  { word: "conflict", meaning: "difference", synonym: "disagreement" },
+  { word: "find", meaning: "finding", synonym: "discovery" },
+  { word: "deceitful", meaning: "lying", synonym: "dishonest" },
+  { word: "hate", meaning: "not like", synonym: "dislike (v)" },
+  { word: "theatrical", meaning: "emotional", synonym: "dramatic" },
+  { word: "either", meaning: "any option", synonym: "either way" },
+  { word: "amazing", meaning: "remarkable", synonym: "extraordinary" },
+  { word: "results", meaning: "results", synonym: "findings" },
+  { word: "fit", meaning: "healthy", synonym: "fit (adj)" },
+  { word: "attention", meaning: "concentration", synonym: "focus (n)" },
+  { word: "evade", meaning: "succeed in", synonym: "get away with" },
+  { word: "quit", meaning: "abandon", synonym: "give up" },
+  { word: "exit", meaning: "leave", synonym: "go out" },
+  { word: "adult", meaning: "adult", synonym: "grown-up" },
+  { word: "delay", meaning: "delay", synonym: "hold up (v)" },
+  { word: "speed", meaning: "speed up", synonym: "hurry up" },
+  { word: "same", meaning: "exactly the same", synonym: "identical" },
+  { word: "corrupt", meaning: "unethical", synonym: "immoral" },
+  { word: "actually", meaning: "in reality", synonym: "in actual fact" },
+  { word: "problem", meaning: "problem", synonym: "issue (n)" },
+  { word: "information", meaning: "information", synonym: "knowledge" },
+  { word: "active", meaning: "energetic", synonym: "lively" },
+  { word: "login", meaning: "sign in", synonym: "log on" },
+  { word: "logical", meaning: "be logical", synonym: "make sense" },
+  { word: "misinterpret", meaning: "fail to understand", synonym: "misunderstand" },
+  { word: "confuse", meaning: "confuse", synonym: "mix up (v)" },
+  { word: "humble", meaning: "humble", synonym: "modest" },
+  { word: "enigma", meaning: "puzzle", synonym: "mystery" },
+  { word: "yet", meaning: "still", synonym: "nevertheless" },
+  { word: "shock", meaning: "very surprised", synonym: "not believe" },
+  { word: "diet", meaning: "restrict food", synonym: "on a diet" },
+  { word: "first", meaning: "on the one hand", synonym: "on the other hand" },
+  { word: "character", meaning: "character", synonym: "personality" },
+  { word: "endure", meaning: "tolerate", synonym: "put up with" },
+  { word: "reason", meaning: "explanation", synonym: "reason (n)" },
+  { word: "comfort", meaning: "comfort", synonym: "reassure" },
+  { word: "reuse", meaning: "reuse", synonym: "recycle" },
+  { word: "reimburser", meaning: "reimburser", synonym: "refund (n)" },
+  { word: "bond", meaning: "connector", synonym: "relationship" },
+  { word: "calm", meaning: "stay composed", synonym: "remain calm" },
+  { word: "study", meaning: "investigate", synonym: "research (v)" },
+  { word: "steal", meaning: "steal", synonym: "rob (v)" },
+  { word: "erase", meaning: "erase", synonym: "rub out" },
+  { word: "wages", meaning: "payment for work", synonym: "salary" },
+  { word: "arrive", meaning: "arrive", synonym: "show up" },
+  { word: "pavement", meaning: "pavement", synonym: "sidewalk" },
+  { word: "important", meaning: "important", synonym: "significant" },
+  { word: "likeness", meaning: "resemblance", synonym: "similarity" },
+  { word: "angry", meaning: "sounds upset", synonym: "sounds angry" },
+  { word: "discount", meaning: "promotion", synonym: "special offer" },
+  { word: "break", meaning: "break up", synonym: "split up (v)" },
+  { word: "oddly", meaning: "oddly", synonym: "strangely enough" },
+  { word: "summarize", meaning: "summarize", synonym: "sum up" },
+  { word: "dare", meaning: "take chances", synonym: "take a risk" },
+  { word: "fasten", meaning: "fasten", synonym: "tie up" },
+  { word: "advice", meaning: "helpful advice", synonym: "tip (n)" },
+  { word: "initially", meaning: "initially", synonym: "to start with" },
+  { word: "awkward", meaning: "ill at ease", synonym: "uncomfortable" },
+  { word: "naked", meaning: "without clothes", synonym: "undressed" },
+  { word: "jobless", meaning: "jobless", synonym: "unemployed" },
+  { word: "surprise", meaning: "surprising", synonym: "unexpected" },
+  { word: "not identified", meaning: "not known", synonym: "unknown" },
+  { word: "take out", meaning: "open", synonym: "unpack" },
+  { word: "frailty", meaning: "lack of strength", synonym: "weakness" },
+  { word: "exhaust", meaning: "wear down", synonym: "wear out" }
+];
 
-        let currentWord;
-        let score = 0;
-        let attempts = 0;
-        let remainingWords = [...words];
+let currentWordIndex = 0;
+let correctCount = 0;
+let wrongCount = 0;
+let gameOver = false;
+let selectedOptions = new Set();
 
-        const wordElement = document.getElementById('word');
-        const optionsElement = document.getElementById('options');
-        const submitButton = document.getElementById('submit');
-        const feedbackElement = document.getElementById('feedback');
-        const statusElement = document.getElementById('status');
+function displayWord() {
+  if (gameOver) return;
+  selectedOptions.clear();
+  const word = wordList[currentWordIndex];
+  if (!word) {
+    console.error("Word undefined at index:", currentWordIndex);
+    gameOver = true;
+    return;
+  }
+  document.getElementById("word").textContent = word.word;
 
-        function shuffleArray(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
-        }
+  let optionsHTML = '';
+  const options = [word.meaning, word.synonym];
+  while (options.length < 5) {
+    let randomIndex = Math.floor(Math.random() * wordList.length);
+    let randomMeaning = wordList[randomIndex].meaning;
+    if (!options.includes(randomMeaning) && wordList[randomIndex].word !== word.word) {
+      options.push(randomMeaning);
+    }
+  }
+  options.sort(() => Math.random() - 0.5);
 
-        function getRandomOptions(count) {
-            const options = words.filter(w => w !== currentWord).map(w => w.meaning);
-            shuffleArray(options);
-            return options.slice(0, count);
-        }
+  for (const option of options) {
+    optionsHTML += `<button class="option" data-option="${option}" onclick="selectOption(this)">${option}</button>`;
+  }
+  document.getElementById("options").innerHTML = optionsHTML;
+}
 
-        function displayWord() {
-            if (remainingWords.length === 0) {
-                wordElement.textContent = "Game Over!";
-                optionsElement.innerHTML = `<p>Your final score is ${score}.</p>`;
-                submitButton.style.display = 'none';
-                statusElement.textContent = `Game completed!`;
-                return;
-            }
+function selectOption(button) {
+  if (gameOver) return;
+  const option = button.dataset.option;
+  if (selectedOptions.has(option)) {
+    selectedOptions.delete(option);
+    button.classList.remove('selected');
+  } else {
+    selectedOptions.add(option);
+    button.classList.add('selected');
+  }
+  if (selectedOptions.size === 2) checkAnswer();
+}
 
-            const index = Math.floor(Math.random() * remainingWords.length);
-            currentWord = remainingWords[index];
-            remainingWords.splice(index, 1);
+function checkAnswer() {
+  const word = wordList[currentWordIndex];
+  const isCorrect = selectedOptions.has(word.meaning) && selectedOptions.has(word.synonym);
 
-            wordElement.textContent = currentWord.word;
+  if (isCorrect) {
+    correctCount++;
+    playWinSound();
+    updateStatus();
+    displayFeedback("Correct! 🎉");
+    nextWord();
+  } else {
+    wrongCount++;
+    playSadSound();
+    updateStatus();
+    displayFeedback("Incorrect! 😥 Try again.");
+  }
+}
 
-            const options = [
-                currentWord.meaning,
-                currentWord.synonym,
-                ...getRandomOptions(3)
-            ];
-            shuffleArray(options);
+function nextWord() {
+  currentWordIndex++;
+  if (currentWordIndex >= wordList.length) {
+    gameOver = true;
+    if (correctCount > 70) playEndSound();
+    displayFeedback("Game Over!");
+    return;
+  }
+  updateStatus();
+  displayWord();
+}
 
-            optionsElement.innerHTML = '';
-            options.forEach(option => {
-                const button = document.createElement('button');
-                button.textContent = option;
-                button.classList.add('option');
-                button.addEventListener('click', () => toggleOption(button));
-                optionsElement.appendChild(button);
-            });
+function updateStatus() {
+  document.getElementById("correctCount").textContent = correctCount;
+  document.getElementById("wrongCount").textContent = wrongCount;
+  document.getElementById("wordsLeft").textContent = wordList.length - currentWordIndex;
+}
 
-            submitButton.disabled = true;
-            feedbackElement.textContent = '';
-            updateStatus();
-        }
+function displayFeedback(message) {
+  document.getElementById("feedback").innerHTML = `<span class="${message.includes("Correct") ? 'correct' : 'incorrect'}">${message}</span>`;
+}
 
-        function toggleOption(button) {
-            button.classList.toggle('selected');
-            submitButton.disabled = document.querySelectorAll('.option.selected').length !== 2;
-        }
+function playWinSound() {
+  const winSoundIndex = Math.floor(Math.random() * 6) + 1;
+  const winSound = document.getElementById(`win${winSoundIndex}`);
+  if (winSound) winSound.play();
+}
 
-        function checkAnswer() {
-            attempts++;
-            const selectedOptions = Array.from(document.querySelectorAll('.option.selected')).map(b => b.textContent);
-            const correctOptions = [currentWord.meaning, currentWord.synonym];
-            
-            if (selectedOptions.every(option => correctOptions.includes(option)) && selectedOptions.length === 2) {
-                feedbackElement.textContent = "Correct! Well done!";
-                feedbackElement.className = "correct";
-                score++;
-                playSound(true);
-                setTimeout(displayWord, 1500);
-            } else {
-                feedbackElement.textContent = "Incorrect. Try again!";
-                feedbackElement.className = "incorrect";
-                playSound(false);
-                if (attempts === 2) {
-                    feedbackElement.textContent = `Sorry, the correct answers are: ${correctOptions.join(' and ')}`;
-                    setTimeout(displayWord, 3000);
-                    attempts = 0;
-                }
-            }
-            updateStatus();
-        }
+function playSadSound() {
+  const sadSoundIndex = Math.floor(Math.random() * 4) + 1;
+  const sadSound = document.getElementById(`sad${sadSoundIndex}`);
+  if (sadSound) sadSound.play();
+}
 
-        function updateStatus() {
-            statusElement.textContent = `Score: ${score} | Attempts: ${attempts} | Words left: ${remainingWords.length}`;
-        }
+function playEndSound() {
+  const endSound = document.getElementById("end1");
+  if (endSound) endSound.play();
+}
 
-        function playSound(correct) {
-            const audio = new Audio(correct ? '/api/sound/success' : '/api/sound/error');
-            audio.play();
-        }
+displayWord();
+</script>
 
-        submitButton.addEventListener('click', checkAnswer);
-        displayWord();
-    </script>
+<audio id="win1" src="win1.mp3"></audio>
+<audio id="win2" src="win2.mp3"></audio>
+<audio id="win3" src="win3.mp3"></audio>
+<audio id="win4" src="win4.mp3"></audio>
+<audio id="win5" src="win5.mp3"></audio>
+<audio id="win6" src="win6.mp3"></audio>
+<audio id="sad1" src="sad1.mp3"></audio>
+<audio id="sad2" src="sad2.mp3"></audio>
+<audio id="sad3" src="sad3.mp3"></audio>
+<audio id="sad4" src="sad4.mp3"></audio>
+<audio id="end1" src="end1.mp3"></audio>
 </body>
 </html>

@@ -1,0 +1,73 @@
+body {
+  font-family: 'Comic Sans MS', cursive, sans-serif;
+  background-color: #fce4ec; /* Light pink background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+#game-container {
+  background-color: white;
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  max-width: 600px;
+  width: 100%;
+}
+
+h1 {
+  color: #e91e63; /* Deep pink heading */
+}
+
+#word {
+  font-size: 36px;
+  color: #9c27b0; /* Purple word */
+  margin: 20px 0;
+}
+
+.option {
+  background-color: #f8bbd0; /* Light pink button */
+  border: none;
+  border-radius: 15px;
+  color: #880e4f; /* Darker pink text */
+  padding: 10px 20px;
+  margin: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.option:hover {
+  background-color: #f48fb1; /* Slightly darker pink on hover */
+}
+
+.option.selected {
+  background-color: #ff4081; /* Bright pink for selected */
+  color: white;
+}
+
+#feedback {
+  margin: 20px 0;
+  font-weight: bold;
+}
+
+.correct {
+  color: #4caf50; /* Green for correct */
+}
+
+.incorrect {
+  color: #f44336; /* Red for incorrect */
+}
+
+.status {
+  margin-top: 20px;
+  font-size: 14px;
+  color: #616161; /* Gray for status */
+}
+
+.status-item {
+  margin: 0 10px;
+}
